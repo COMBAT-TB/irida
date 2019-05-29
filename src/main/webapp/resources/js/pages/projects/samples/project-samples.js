@@ -10,7 +10,6 @@ import { formatDate } from "../../../utilities/date-utilities";
 import "./../../../vendor/datatables/datatables";
 import "./../../../vendor/datatables/datatables-buttons";
 import "./../../../vendor/datatables/datatables-rowSelection";
-import { CART } from "../../../utilities/events-utilities";
 import {
   SampleCartButton,
   SampleDropdownButton,
@@ -21,6 +20,8 @@ import { FILTERS, SAMPLE_EVENTS } from "./constants";
 import { download } from "../../../utilities/file.utilities";
 import moment from "moment";
 import "../../../../sass/pages/project-samples.scss";
+import { putSampleInCart } from "../../../apis/cart/cart";
+import { cartNotification } from "../../../utilities/events-utilities";
 
 /*
 This is required to use select2 inside a modal.
@@ -49,6 +50,21 @@ const SAMPLE_TOOL_BUTTONS = [...sampleToolsNodes].map(
   elm => new SampleDropdownButton(elm)
 );
 
+/**
+ * Get the ids for all selected samples within the table.
+ * @returns {Array}
+ */
+const getSelectedIds = () => {
+  const selected = $dt.select.selected()[0];
+  const ids = [];
+  for (let [, value] of selected) {
+    // Selected samples not currently listed on the page (i.e. from a different page
+    // in the table only store minimal data not the full sample.
+    ids.push(typeof value.sample === "undefined" ? value.id : value.sample);
+  }
+  return ids;
+};
+
 /*
 Initialize the sample export menu.
  */
@@ -56,12 +72,7 @@ const EXPORT_HANDLERS = {
   download() {
     // this is set by the object calling (i.e. download btn)
     const url = this.data("url");
-    const selected = $dt.select.selected()[0];
-    const ids = [];
-    selected.forEach(s => {
-      ids.push(s.sample);
-    });
-    download(`${url}?${$.param({ ids })}`);
+    download(`${url}?${$.param({ ids: getSelectedIds() })}`);
   },
   file() {
     // this is set by the object calling (i.e. download btn)
@@ -71,11 +82,7 @@ const EXPORT_HANDLERS = {
     download(`${url}?${$.param(params)}`);
   },
   ncbi() {
-    const ids = [];
-    const selected = $dt.select.selected()[0];
-    selected.forEach(s => {
-      ids.push(s.sample);
-    });
+    const ids = getSelectedIds();
     /*
     NCBI Export is a separate page.  If there are ids available for export,
     redirect the user to that page.
@@ -106,21 +113,24 @@ const EXPORT_HANDLERS = {
 Initialize the add to cart button
  */
 const cartBtn = new SampleCartButton($(".js-cart-btn"), function() {
-  const selected = $dt.select.selected()[0];
-  /*
-  Selected data needs to be formatted into an object: {projectId => [sampleIds]}
-   */
   const projects = {};
-  selected.forEach(item => {
-    projects[item.project] = projects[item.project] || [];
-    projects[item.project].push(item.sample);
-  });
+  const selected = $dt.select.selected()[0].keys();
+  let next = selected.next();
+  while (!next.done) {
+    const data =
+      $dt.row(`#${next.value}`).data() ||
+      $dt.select.selected()[0].get(next.value);
+    projects[data.projectId] = projects[data.projectId] || [];
+    projects[data.projectId].push({ id: data.id, label: data.sampleName });
+    next = selected.next();
+  }
 
-  /*
-  Update the cart with the new samples.
-   */
-  const event = new CustomEvent(CART.ADD, { detail: { projects } });
-  document.dispatchEvent(event);
+  // Updated post method
+  Object.keys(projects).forEach(id => {
+    putSampleInCart(+id, projects[id]).then(response => {
+      cartNotification(response.data);
+    });
+  });
 });
 SAMPLE_TOOL_BUTTONS.push(cartBtn);
 
@@ -214,16 +224,8 @@ const config = Object.assign({}, tableConfig, {
       // to format the server response when selectAll is clicked.
       // It puts the response into the format of the `data-info` attribute
       // set on the row itself ({row_id: {projectId, sampleId}}
-      const projectIds = Object.keys(response);
       const complete = new Map();
-      for (const pId of projectIds) {
-        for (const sId of response[pId]) {
-          complete.set(`row_${sId}`, {
-            project: pId,
-            sample: sId
-          });
-        }
-      }
+      response.forEach(sample => complete.set(`row_${sample.id}`, sample));
       return complete;
     }
   },
@@ -318,9 +320,13 @@ const config = Object.assign({}, tableConfig, {
   },
   createdRow(row, data) {
     const $row = $(row);
+    /*
+    Ensure the data stored can be used to save the sample the cart.
+     */
     row.dataset.info = JSON.stringify({
-      project: data.projectId,
-      sample: data.id
+      projectId: data.projectId,
+      id: data.id,
+      sampleName: data.sampleName
     });
     /*
     If there are QC errors, highlight the row
@@ -388,7 +394,7 @@ $(".associated-dd .dropdown-menu a").on("click", function(event) {
     // Update the select all checkbox
     $("#select-all-cb").prop(
       "checked",
-      ASSOCIATED_PROJECTS.size === ASSOCIATED_INPUTS.size()
+      ASSOCIATED_PROJECTS.size === ASSOCIATED_INPUTS.length
     );
     // Update the DataTable
     $dt.ajax.reload(null, false);
@@ -424,12 +430,7 @@ $("#js-modal-wrapper").on("show.bs.modal", function(event) {
   /*
   Find the ids for the currently selected samples.
    */
-  const selected = $dt.select.selected()[0];
-  const sampleIds = [];
-  for (let [key, value] of selected) {
-    sampleIds.push(value.sample);
-  }
-  params["sampleIds"] = sampleIds;
+  params["sampleIds"] = getSelectedIds();
 
   let script;
   modal.load(`${url}?${$.param(params)}`, function() {
@@ -634,52 +635,7 @@ function displayFilters(filters) {
 
   $(".filter-tags").html($wrapper);
 }
-
 /*
 Activate page tooltips
  */
 $('[data-toggle="popover"]').popover();
-
-// TODO: (Josh : 2017-11-20): Please refactor this code to remove angular and
-// update modal request to include necessary parameters.
-const app = angular.module("irida");
-
-app.controller("GalaxyExportController", [
-  "$uibModal",
-  function($uibModal) {
-    const vm = this;
-
-    vm.exportToGalaxy = function exportToGalaxy($event) {
-      const templateUrl = $event.target.dataset.url;
-      const projectId = $event.target.dataset.projectId;
-      const ids = [];
-      const selected = $dt.select.selected()[0];
-      selected.forEach(s => {
-        ids.push(s.sample);
-      });
-
-      // Cart is expecting an object {projectId: [sampleIds]}
-      const sampleIds = { [projectId]: ids };
-
-      $uibModal.open({
-        templateUrl,
-        controllerAs: "gCtrl",
-        controller: "GalaxyDialogCtrl",
-        resolve: {
-          sampleIds() {
-            return sampleIds;
-          },
-          openedByCart() {
-            return false;
-          },
-          multiProject() {
-            return false;
-          },
-          projectId() {
-            return projectId;
-          }
-        }
-      });
-    };
-  }
-]);

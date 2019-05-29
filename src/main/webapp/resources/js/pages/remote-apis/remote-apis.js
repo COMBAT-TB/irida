@@ -32,7 +32,7 @@ export function updateRemoteConnectionStatus($container, apiId) {
   const $status = $container.find(".js-status-wrapper");
 
   return getApiStatus(apiId)
-    .success(response => {
+    .done(response => {
       $status.html(response);
       if (response.includes("invalid_token")) {
         $container.find(".oauth-connect-link").removeClass("hidden");
@@ -40,7 +40,7 @@ export function updateRemoteConnectionStatus($container, apiId) {
         $container.find(".oauth-connect-link").addClass("hidden");
       }
     })
-    .error(() => {
+    .fail(() => {
       try {
         // Update the DOM with an error message.
         $status.html(
@@ -51,7 +51,7 @@ export function updateRemoteConnectionStatus($container, apiId) {
       } catch (e) {
         // Since this code is loaded onto multiple pages, this error is thrown so the developer
         // will be reminded ot add that to the page.
-        new Error(
+        throw new Error(
           "Expected window to have Object `PAGE` with `lang.errorText` as a property"
         );
       }

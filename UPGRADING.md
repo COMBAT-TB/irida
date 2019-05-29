@@ -4,6 +4,16 @@ Upgrading
 This document summarizes the environmental changes that need to be made when
 upgrading IRIDA that cannot be automated.
 
+19.01 to 19.05
+--------------
+* This upgrade makes schema changes to the databases and cannot be parallel deployed.  Servlet container must be stopped before deploying the new `war` file.
+* This upgrade will remove FastQC resuts from the database and move them to the file system.  It is **strongly** recommended to make a backup of your database before this upgrade.  Before upgrading you should read more at https://irida.corefacility.ca/documentation/administrator/upgrades/#1905.
+
+19.01 to 19.01.2
+----------------
+* A new configuration value is available to control the number of threads used for communication with Galaxy when running pipelines. The default value is **4**. To change, please set `irida.workflow.analysis.threads` in the `/etc/irida/irida.conf` file. This can help when running lots of pipelines in IRIDA.
+
+
 0.22.0 to 19.01
 ----------------
 * The following new Tomcat variable should be set for deployment `irida.db.profile=prod` for production deployments. See https://irida.corefacility.ca/documentation/administrator/web/#servlet-container-configuration for more details.

@@ -1,10 +1,46 @@
 Changes
 =======
 
-19.01 to 19.04
---------------
+19.01 to 19.05
+---------------
+* [Documentation]: Added the CalVer updates to the documentation getting started guide.
+* [Documentation]: Added note with link to NGS Linker installation documentation to Command-line Linker modal
 * [UI/Developer]: Updated to lodash v4.17.11 to fix security issue. (19.01.1)
+* [UI/Developer]: Updated yarn to (1.13.0) and node to (11.10.0).
+* [UI]: Added ability for user to select if they would like to receive an email upon pipeline completion.
+* [UI/Developer]: Added expose loader to load external dependencies through the vendor bundle.
+* [UI/Developer]: Updated jquery to v3.3.1 to fix security issue.
+* [UI/Developer]: Updated bootstrap dependencies and cleaned up dependencies by running `yarn install --flat` and resolving dependencies.
+* [UI]: Fixed typo when loading data in **Advanced Phylogenomic Visualization** page.
 * [Admin]: Added message to add `irida.db.profile` param for Tomcat in docs and upgrading guide.
+* [UI/Developer]: Added code splitting to webpack bundles.
+* [UI/Developer]: Added checkbox to Create a New Project page for user to lock sample modification when a project is created from samples in the cart.
+* [UI/Developer]: Minor JavaScript code cleanup.
+* [Developer]: Updated spring security to 4.0.4.RELEASE.
+* [Admin]: Made analysis task pool size configurable with `irida.workflow.analysis.threads`. (19.01.2)
+* [REST]: Fixes issue where the Sample collection date was synchronized incorrectly, leading to the synced date up to one day off from the original date. (19.01.2)
+* [UI]: Fixed bug where uploading a metadata file with a `.` in the header row would cause an error. (19.01.2)
+* [UI]: Updated icons for datatables sorting and metadata importer.
+* [UI]: Fixed bug where users could not update their email subscriptions to projects. (19.01.2)
+* [UI/Developer]: Fixed issue where search for member to add to group resulted in no results found when search term contained capital letters.
+* [Documentation]: Added information on fixing `ONLY_FULL_GROUP_BY` sql error to the administrator faq docs.
+* [UI]: User on a remote project with a project role of manager has the ability to assign user groups to the project.
+* [UI]: Fixed bug preventing associated projects from being loaded into the project samples table. (19.01.3)
+* [Developer]: Moved FastQC results out of database to filesystem for a big reduction in database size and performance.  See https://irida.corefacility.ca/documentation/adminstrator/upgrades/#1904 for more information. 
+* [UI]: Added hard wrap on sample name on sample details page.
+* [UI]: New dedicated cart page.
+* [UI]: Exporting to Galaxy now runs through the new cart interface.  Export to Galaxy through the Project Samples page has been deprecated.
+* [Developer]: Updated Travis CI dist to `xenial`.
+* [Developer]: Falling back to mysql for TravisCI testing.  MariaDB currently having install issues.
+* [Developer]: Updated chromedriver in pom.xml and packages.json to newer versions to work better with newest chrome version.
+* [UI]: Removed `.xlsx` files from being previewed in the pipeline results page.
+* [UI/Developer]: Fixed issue with deleting a user group if it is linked to any projects.
+* [UI]: Fixes issue where importing an excel file that contained "Created Date" and "Modified Date" created metadata fields with those labels.
+* [REST]: Updated http status code returned (400 Bad Request) when uploading files to the wrong type of run
+* [UI/Developer]: Updated to jquery v3.4.0 to fix security issue.
+* [Database]: Fixed issue where FastQC description was being stored with an invalidly formatted version in the database.
+* [UI]: Fixed bug causing issues with saving Line List templates.
+* [UI]: Fixed bug when selecting all samples on the project samples page would not add them to cart.
 
 0.22.0 to 19.01
 ----------------

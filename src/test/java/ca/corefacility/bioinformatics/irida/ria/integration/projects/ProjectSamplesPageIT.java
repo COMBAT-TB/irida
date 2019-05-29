@@ -1,18 +1,19 @@
 package ca.corefacility.bioinformatics.irida.ria.integration.projects;
 
-import static org.junit.Assert.*;
-
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Test;
+
+import ca.corefacility.bioinformatics.irida.ria.integration.AbstractIridaUIITChromeDriver;
+import ca.corefacility.bioinformatics.irida.ria.integration.pages.LoginPage;
+import ca.corefacility.bioinformatics.irida.ria.integration.pages.projects.ProjectSamplesPage;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import ca.corefacility.bioinformatics.irida.ria.integration.AbstractIridaUIITChromeDriver;
-import ca.corefacility.bioinformatics.irida.ria.integration.pages.LoginPage;
-import ca.corefacility.bioinformatics.irida.ria.integration.pages.projects.ProjectSamplesPage;
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -22,6 +23,16 @@ import ca.corefacility.bioinformatics.irida.ria.integration.pages.projects.Proje
  */
 @DatabaseSetup("/ca/corefacility/bioinformatics/irida/ria/web/projects/ProjectSamplesView.xml")
 public class ProjectSamplesPageIT extends AbstractIridaUIITChromeDriver {
+	@After
+	public void resetTable() {
+		/*
+		This was added to ensure that after every test the samples table is returned to its default
+		state.  Current DataTables stores a reference to which page in the table the user is on.
+		 */
+		ProjectSamplesPage page = ProjectSamplesPage.gotToPage(driver(), 1);
+		page.closeModalIfOpen();
+		page.selectPaginationPage(1);
+	}
 
 	@Test(expected = AssertionError.class)
 	public void testGoingToInvalidPage() {
@@ -131,9 +142,20 @@ public class ProjectSamplesPageIT extends AbstractIridaUIITChromeDriver {
 		page.selectSampleWithShift(4);
 		assertEquals("Should be 5 selected samples", "5 samples selected", page.getSelectedInfoText());
 
-		page.addSelectedSamplesToCart();
-		assertEquals("Should be 5 samples in the cart", 5, page.getCartCount());
 
+		page.goToNextPage();
+		page.selectSample(1);
+		page.selectSample(2);
+		assertEquals("Should be 7 selected samples", "7 samples selected", page.getSelectedInfoText());
+
+		page.addSelectedSamplesToCart();
+		assertEquals("Should be 7 samples in the cart", 7, page.getCartCount());
+		page.selectPaginationPage(1);
+
+		// Need to make sure select all samples works
+		page.selectAllSamples();
+		page.addSelectedSamplesToCart();
+		assertEquals("Should be 21 samples in the cart", 21, page.getCartCount());
 	}
 
 	@Test
@@ -338,7 +360,7 @@ public class ProjectSamplesPageIT extends AbstractIridaUIITChromeDriver {
 	public void testFilteringWithDates() {
 		LoginPage.loginAsManager(driver());
 		ProjectSamplesPage page = ProjectSamplesPage.gotToPage(driver(), 1);
-		page.filterByDateRange("07/06/2015", "07/09/2015");
+		page.filterByDateRange("07/06/2015 - 07/09/2015");
 		assertEquals("Should ignore case when filtering", "Showing 1 to 4 of 4 entries", page.getTableInfo());
 
 		// Make sure that when the filter is applied, only the correct number of samples are selected.
@@ -382,7 +404,7 @@ public class ProjectSamplesPageIT extends AbstractIridaUIITChromeDriver {
 		LoginPage.loginAsManager(driver());
 		ProjectSamplesPage page = ProjectSamplesPage.gotToPage(driver(), 1);
 
-		page.filterByDateRange("07/06/2015", "07/09/2015");
+		page.filterByDateRange("07/06/2015 - 07/09/2015");
 		assertEquals("Should ignore case when filtering", "Showing 1 to 4 of 4 entries", page.getTableInfo());
 
 		// Make sure that when the filter is applied, only the correct number of samples are selected.
