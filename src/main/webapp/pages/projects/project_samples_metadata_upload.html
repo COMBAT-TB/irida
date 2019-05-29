@@ -5,7 +5,7 @@
       data-layout-decorate="~{projects/_base}">
 <head>
     <title th:text="#{metadata.page-title}"></title>
-    <link rel="stylesheet" th:href="@{/resources/dist/css/samples-metadata-import.bundle.css}"/>
+    <link rel="stylesheet" th:href="@{/dist/css/samples-metadata-import.bundle.css}"/>
 </head>
 <body>
 <div layout:fragment="main">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <ul class="list-group">
-            <li class="list-group-item" ng-repeat="header in $ctrl.headers">
+            <li class="list-group-item" ng-repeat="header in $ctrl.headers track by $index">
                 <header-item header="header"></header-item>
             </li>
         </ul>
@@ -126,7 +126,7 @@
         </div>
         <table id="missing-table" class="table table-striped nowrap" cellspacing="0" width="100%"></table>
     </script>
-    <script th:src="@{/resources/dist/js/samples-metadata-import.bundle.js}"></script>
+    <script th:src="@{/dist/js/samples-metadata-import.bundle.js}"></script>
 </th:block>
 </body>
 </html>

@@ -35,6 +35,7 @@ import ca.corefacility.bioinformatics.irida.config.security.IridaApiSecurityConf
 import ca.corefacility.bioinformatics.irida.config.services.WebEmailConfig;
 import ca.corefacility.bioinformatics.irida.ria.config.AnalyticsHandlerInterceptor;
 import ca.corefacility.bioinformatics.irida.ria.config.BreadCrumbInterceptor;
+import ca.corefacility.bioinformatics.irida.ria.config.GalaxySessionInterceptor;
 import ca.corefacility.bioinformatics.irida.ria.config.UserSecurityInterceptor;
 import ca.corefacility.bioinformatics.irida.ria.web.components.datatables.config.DataTablesRequestResolver;
 
@@ -83,6 +84,11 @@ public class IridaUIWebConfig extends WebMvcConfigurerAdapter implements Applica
 	}
 
 	@Bean
+	public GalaxySessionInterceptor galaxySessionInterceptor() {
+		return new GalaxySessionInterceptor();
+	}
+
+	@Bean
 	public AnalyticsHandlerInterceptor analyticsHandlerInterceptor() {
 		Path analyticsPath = Paths.get(ANALYTICS_DIR);
 		StringBuilder analytics = new StringBuilder();
@@ -126,7 +132,7 @@ public class IridaUIWebConfig extends WebMvcConfigurerAdapter implements Applica
 		// CSS: default location "/static/styles" during development and
 		// production.
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-		registry.addResourceHandler("/public/**").addResourceLocations("/public/");
+		registry.addResourceHandler("/dist/**").addResourceLocations("/dist/");
 	}
 
 	@Override
@@ -135,7 +141,6 @@ public class IridaUIWebConfig extends WebMvcConfigurerAdapter implements Applica
 		registry.addViewController("/projects/templates/copy").setViewName("projects/templates/copy");
 		registry.addViewController("/projects/templates/move").setViewName("projects/templates/move");
 		registry.addViewController("/projects/templates/remove").setViewName("projects/templates/remove-modal.tmpl");
-		registry.addViewController("/cart/templates/galaxy").setViewName("cart/templates/galaxy");
 		registry.addViewController("/projects/templates/referenceFiles/delete")
 				.setViewName("projects/templates/referenceFiles/delete");
 	}
@@ -186,6 +191,7 @@ public class IridaUIWebConfig extends WebMvcConfigurerAdapter implements Applica
 	public void addInterceptors(InterceptorRegistry registry) {
 		logger.debug("Adding Interceptors to the Registry");
 		registry.addInterceptor(localeChangeInterceptor());
+		registry.addInterceptor(galaxySessionInterceptor());
 		registry.addInterceptor(analyticsHandlerInterceptor());
 		registry.addInterceptor(breadCrumbInterceptor());
 		registry.addInterceptor(userSecurityInterceptor());

@@ -2,7 +2,6 @@ package ca.corefacility.bioinformatics.irida.config.security;
 
 import java.lang.reflect.Field;
 
-import ca.corefacility.bioinformatics.irida.repositories.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerSecurityConfiguration;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.*;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -44,6 +39,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
+import ca.corefacility.bioinformatics.irida.repositories.user.UserRepository;
 import ca.corefacility.bioinformatics.irida.ria.config.filters.SessionFilter;
 import ca.corefacility.bioinformatics.irida.ria.security.CredentialsExpriredAuthenticationFailureHandler;
 import ca.corefacility.bioinformatics.irida.ria.security.LoginSuccessHandler;
@@ -200,8 +196,8 @@ public class IridaWebSecurityConfig extends WebSecurityConfigurerAdapter {
 		public void configure(WebSecurity web) throws Exception {
 			web.ignoring()
 					.antMatchers("/node_modules/**")
-					.antMatchers("/resources/**")
-					.antMatchers("/public/**");
+					.antMatchers("/dist/**")
+					.antMatchers("/resources/**");
 		}
 
 		@Override
@@ -229,6 +225,7 @@ public class IridaWebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests().antMatchers("/login**").permitAll()
 				.antMatchers("/resources/**").permitAll()
+				.antMatchers("/dist/**").permitAll()
 				.antMatchers("/password_reset/**").permitAll()
 				.antMatchers("/**").fullyAuthenticated()
 			.and().addFilterAfter(getSessionModelFilter(), SecurityContextHolderAwareRequestFilter.class);
