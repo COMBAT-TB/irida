@@ -34,6 +34,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+//import org.hibernate.annotations.common.util.impl.Log_.logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An analysis object for storing results of an analysis execution.
  * 
@@ -43,6 +48,8 @@ import com.google.common.collect.ImmutableSet;
 @Table(name = "analysis")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Analysis extends IridaResourceSupport implements IridaThing {
+
+	private static final Logger logger = LoggerFactory.getLogger(Analysis.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,7 +83,7 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 	@Embedded
 	@NotNull
 	private AnalysisType analysisType;
-	
+
 	/**
 	 * For hibernate
 	 */
@@ -93,7 +100,8 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 	/**
 	 * Builds a new {@link Analysis} object with the given information.
 	 *
-	 * @param executionManagerAnalysisId The id for an execution manager used with this analysis.
+	 * @param executionManagerAnalysisId The id for an execution manager used with
+	 *                                   this analysis.
 	 * @param analysisOutputFilesMap     A {@link Map} of output file keys and
 	 *                                   {@link AnalysisOutputFile}s.
 	 * @param analysisType               The {@link AnalysisType} for this analysis
@@ -112,15 +120,12 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 	/**
 	 * Builds a new {@link Analysis} object with the given information.
 	 * 
-	 * @param executionManagerAnalysisId
-	 *            The id for an execution manager used with this analysis.
-	 * @param analysisOutputFilesMap
-	 *            A {@link Map} of output file keys and
-	 *            {@link AnalysisOutputFile}s.
-	 * @param description
-	 *            a description of the analysis.
-	 * @param additionalProperties
-	 *            any other properties available
+	 * @param executionManagerAnalysisId The id for an execution manager used with
+	 *                                   this analysis.
+	 * @param analysisOutputFilesMap     A {@link Map} of output file keys and
+	 *                                   {@link AnalysisOutputFile}s.
+	 * @param description                a description of the analysis.
+	 * @param additionalProperties       any other properties available
 	 */
 	public Analysis(final String executionManagerAnalysisId,
 			final Map<String, AnalysisOutputFile> analysisOutputFilesMap, final String description,
@@ -134,15 +139,13 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 	}
 
 	/**
-	 * Builds a new {@link Analysis} object with the given information and an
-	 * empty set of output files.
+	 * Builds a new {@link Analysis} object with the given information and an empty
+	 * set of output files.
 	 * 
-	 * @param executionManagerAnalysisId
-	 *            The id for an execution manager used with this analysis.
-	 * @param description
-	 *            a description of the analysis.
-	 * @param additionalProperties
-	 *            any other properties available
+	 * @param executionManagerAnalysisId The id for an execution manager used with
+	 *                                   this analysis.
+	 * @param description                a description of the analysis.
+	 * @param additionalProperties       any other properties available
 	 */
 	public Analysis(final String executionManagerAnalysisId, final String description,
 			final Map<String, String> additionalProperties) {
@@ -177,13 +180,10 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 
 	@Override
 	public String toString() {
-		return "Analysis{" + "id=" + id + 
-				", createdDate=" + createdDate +
-				", description='" + description +
-				'\'' + ", executionManagerAnalysisId='" + executionManagerAnalysisId + '\'' +
-				", additionalProperties=" + additionalProperties +
-				", analysisOutputFilesMap=" + analysisOutputFilesMap +
-				", analysisType=" + analysisType + '}';
+		return "Analysis{" + "id=" + id + ", createdDate=" + createdDate + ", description='" + description + '\''
+				+ ", executionManagerAnalysisId='" + executionManagerAnalysisId + '\'' + ", additionalProperties="
+				+ additionalProperties + ", analysisOutputFilesMap=" + analysisOutputFilesMap + ", analysisType="
+				+ analysisType + '}';
 	}
 
 	/**
@@ -214,6 +214,7 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 
 	/**
 	 * Get an output file with the given key
+	 * 
 	 * @param key the key
 	 * @return an AnalysisOutputFile
 	 */
@@ -231,7 +232,7 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 		return this.id;
 	}
 
-	public void setId(Long id){
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -248,11 +249,11 @@ public class Analysis extends IridaResourceSupport implements IridaThing {
 	public Set<String> getAnalysisOutputFileNames() {
 		return analysisOutputFilesMap.keySet();
 	}
-	
+
 	public AnalysisType getAnalysisType() {
 		return analysisType;
 	}
-	
+
 	public void setAnalysisType(AnalysisType analysisType) {
 		this.analysisType = analysisType;
 	}

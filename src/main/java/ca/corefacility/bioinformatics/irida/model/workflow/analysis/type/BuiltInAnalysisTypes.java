@@ -25,5 +25,7 @@ public class BuiltInAnalysisTypes {
 
 	public static final AnalysisType DEFAULT = new AnalysisType("DEFAULT");
 
+	public static final AnalysisType SNIPPY_PHYLOGENOMICS = new AnalysisType("SNIPPY_PHYLOGENOMICS");
+
 	public static final AnalysisType UNKNOWN = new AnalysisType("UNKNOWN");
 }
