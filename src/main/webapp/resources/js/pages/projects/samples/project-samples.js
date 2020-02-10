@@ -1,5 +1,5 @@
 import $ from "jquery";
-import angular from "angular";
+
 import chroma from "chroma-js";
 import {
   createItemLink,
@@ -22,6 +22,7 @@ import moment from "moment";
 import "../../../../sass/pages/project-samples.scss";
 import { putSampleInCart } from "../../../apis/cart/cart";
 import { cartNotification } from "../../../utilities/events-utilities";
+import { setBaseUrl } from "../../../utilities/url-utilities";
 
 /*
 This is required to use select2 inside a modal.
@@ -36,6 +37,7 @@ const POPOVER_OPTIONS = {
   container: "body",
   trigger: "hover",
   placement: "right",
+  sanitize: false,
   html: true,
   template: $("#popover-template").clone()
 };
@@ -207,7 +209,7 @@ const config = Object.assign({}, tableConfig, {
         d[key] = value;
       }
 
-      displayFilters.call($dt, TABLE_FILTERS);
+      displayFilters(TABLE_FILTERS);
     }
   },
   stateSave: true,
@@ -233,10 +235,14 @@ const config = Object.assign({}, tableConfig, {
   rowId: "DT_RowId",
   buttons: ["selectAll", "selectNone"],
   language: {
-    select: window.PAGE.i18n.select,
+    select: {
+      none: i18n("project.samples.counts.none"),
+      one: i18n("project.samples.counts.one"),
+      other: i18n("project.samples.counts.more")
+    },
     buttons: {
-      selectAll: window.PAGE.i18n.buttons.selectAll,
-      selectNone: window.PAGE.i18n.buttons.selectNone
+      selectAll: i18n("project.samples.select.selectAll"),
+      selectNone: i18n("project.samples.select.selectNone")
     }
   },
   columnDefs: [
@@ -268,9 +274,7 @@ const config = Object.assign({}, tableConfig, {
       targets: [COLUMNS.SAMPLE_NAME],
       render(data, type, full) {
         const link = createItemLink({
-          url: `${window.TL.BASE_URL}projects/${full.projectId}/samples/${
-            full.id
-          }`,
+          url: setBaseUrl(`projects/${full.projectId}/samples/${full.id}`),
           label: full.sampleName,
           classes: ["t-sample-label"]
         });
@@ -300,7 +304,7 @@ const config = Object.assign({}, tableConfig, {
       targets: [COLUMNS.PROJECT_NAME],
       render(data, type, full) {
         return createItemLink({
-          url: `${window.TL.BASE_URL}projects/${full.projectId}`,
+          url: setBaseUrl(`projects/${full.projectId}`),
           label: `<div class="label-bar-color" style="background-color: ${PROJECT_COLOURS.get(
             full.projectId
           )}">&nbsp;</div>${data}`,
@@ -584,7 +588,6 @@ clearFilterBtn.addEventListener("click", clearFilters, false);
  */
 function displayFilters(filters) {
   // This should be set by datatable.
-  const table = this;
   const $wrapper = $(`<div class="filter-chip--wrapper"></div>`);
 
   function createChip(name, value, handler) {
@@ -597,22 +600,22 @@ function displayFilters(filters) {
 
   if (filters.has(FILTERS.FILTER_BY_NAME)) {
     createChip(
-      window.PAGE.i18n.chips.name,
+      i18n("project.sample.filter-name"),
       filters.get(FILTERS.FILTER_BY_NAME),
       () => {
         filters.delete(FILTERS.FILTER_BY_NAME);
-        table.ajax.reload();
+        $dt.ajax.reload();
       }
     );
   }
 
   if (filters.has(FILTERS.FILTER_BY_ORGANISM)) {
     createChip(
-      window.PAGE.i18n.chips.organism,
+      i18n("project.sample.filter-organism"),
       filters.get(FILTERS.FILTER_BY_ORGANISM),
       () => {
         filters.delete(FILTERS.FILTER_BY_ORGANISM);
-        table.ajax.reload();
+        $dt.ajax.reload();
       }
     );
   }
@@ -626,7 +629,7 @@ function displayFilters(filters) {
     );
     const end = moment(filters.get(FILTERS.FILTER_BY_LATEST_DATE)).format("ll");
     const range = `${start} - ${end}`;
-    createChip(window.PAGE.i18n.chips.range, range, () => {
+    createChip(i18n("project.sample.filter-date.label"), range, () => {
       filters.delete(FILTERS.FILTER_BY_EARLY_DATE);
       filters.delete(FILTERS.FILTER_BY_LATEST_DATE);
       table.ajax.reload();

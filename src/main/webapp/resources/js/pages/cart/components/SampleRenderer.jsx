@@ -1,9 +1,10 @@
 import React from "react";
+
 import PropTypes from "prop-types";
 import { Button, Dropdown, Icon, Menu } from "antd";
-import { getI18N } from "../../../utilities/i18n-utilties";
 import { grey1, grey4, grey5 } from "../../../styles/colors";
 import { SPACE_SM, SPACE_XS } from "../../../styles/spacing";
+import { setBaseUrl } from "../../../utilities/url-utilities";
 
 const DeleteMenu = ({ removeSample, removeProject }) => (
   <Menu
@@ -16,12 +17,12 @@ const DeleteMenu = ({ removeSample, removeProject }) => (
   >
     <Menu.Item>
       <div onClick={removeSample} className="t-delete-sample">
-        {getI18N("SampleRenderer.remove.sample")}
+        {i18n("SampleRenderer.remove.sample")}
       </div>
     </Menu.Item>
     <Menu.Item>
       <div onClick={removeProject} className="t-delete-project">
-        {getI18N("SampleRenderer.remove.project")}
+        {i18n("SampleRenderer.remove.project")}
       </div>
     </Menu.Item>
   </Menu>
@@ -29,7 +30,10 @@ const DeleteMenu = ({ removeSample, removeProject }) => (
 
 const IconText = ({ type, text }) => (
   <span>
-    <Icon type={type} style={{ marginRight: SPACE_XS, color: grey5, fontSize: 18 }} />
+    <Icon
+      type={type}
+      style={{ marginRight: SPACE_XS, color: grey5, fontSize: 18 }}
+    />
     {text}
   </span>
 );
@@ -111,7 +115,7 @@ export class SampleRenderer extends React.Component {
           <IconText
             type="folder"
             text={
-              <a href={`${window.TL.BASE_URL}projects/${sample.project.id}`}>
+              <a href={setBaseUrl(`projects/${sample.project.id}`)}>
                 {sample.project.label}
               </a>
             }

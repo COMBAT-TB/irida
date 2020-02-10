@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      data-layout-decorate="~{clients/_base}">
+      data-layout-decorate="~{template/page}">
 <head>
     <title th:text="#{clients.title}">_Clients_</title>
-    <link rel="stylesheet" th:href="@{/resources/dist/css/clients-list.bundle.css}">
+    <link rel="stylesheet" th:href="@{/dist/css/clients-list.bundle.css}">
 </head>
 <body>
 <th:block layout:fragment="page">
@@ -33,8 +33,8 @@
         </main>
     </div>
 </th:block>
-<th:block layout:fragment="page-scripts">
-    <script th:src="@{/resources/dist/js/clients-list.bundle.js}"></script>
+<th:block layout:fragment="scripts">
+    <script th:src="@{/dist/js/clients-list.bundle.js}"></script>
 </th:block>
 </body>
 </html>
