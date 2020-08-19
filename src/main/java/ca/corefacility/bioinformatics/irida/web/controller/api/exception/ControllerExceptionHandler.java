@@ -4,15 +4,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -46,8 +38,7 @@ public class ControllerExceptionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
-	private static final MediaType[] ACCEPTABLE_MEDIA_TYPES_ARRAY = new MediaType[] { MediaType.APPLICATION_JSON,
-			MediaType.APPLICATION_XML };
+	private static final MediaType[] ACCEPTABLE_MEDIA_TYPES_ARRAY = new MediaType[] { MediaType.APPLICATION_JSON};
 	private static final String ACCEPTABLE_MEDIA_TYPES = Arrays.toString(ACCEPTABLE_MEDIA_TYPES_ARRAY);
 
 	/**
@@ -106,6 +97,25 @@ public class ControllerExceptionHandler {
 		logger.info("A client attempted to retrieve a resource with an identifier that does not exist at " + new Date()
 				+ ".");
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Handle
+	 * {@link IllegalArgumentException}
+	 * .
+	 *
+	 * @param e
+	 *            the exception as thrown by the service.
+	 * @return an appropriate HTTP response.
+	 */
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ErrorResponse> handleArgumentException(IllegalArgumentException e) {
+		String detailedMessage = e.getMessage();
+		logger.info("A client attempted reach a resource with invalid arguments at " + new Date()
+				+ ". Error message: " + detailedMessage);
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setMessage(detailedMessage);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	/**
@@ -182,7 +192,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> handleInvalidJsonException(HttpMessageNotReadableException e) {
-		logger.debug("Client attempted to send invalid JSON.");
+		logger.debug("Client attempted to send invalid JSON.", e);
 		String message = "Your request could not be parsed.";
 		Throwable cause = e.getCause();
 		ErrorResponse errorResponse = new ErrorResponse();

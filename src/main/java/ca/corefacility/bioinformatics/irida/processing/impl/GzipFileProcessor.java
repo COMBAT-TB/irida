@@ -1,13 +1,12 @@
 package ca.corefacility.bioinformatics.irida.processing.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.zip.GZIPInputStream;
 
+import ca.corefacility.bioinformatics.irida.model.sequenceFile.Fast5Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import ca.corefacility.bioinformatics.irida.model.sequenceFile.SequencingObject;
 import ca.corefacility.bioinformatics.irida.processing.FileProcessor;
 import ca.corefacility.bioinformatics.irida.processing.FileProcessorException;
 import ca.corefacility.bioinformatics.irida.repositories.sequencefile.SequenceFileRepository;
+import ca.corefacility.bioinformatics.irida.util.FileUtils;
 
 /**
  * Handle gzip-ed files (if necessary). This class partially assumes that gzip
@@ -27,8 +27,8 @@ import ca.corefacility.bioinformatics.irida.repositories.sequencefile.SequenceFi
  * compressed file does not end with ".gz", then it will be renamed as such so
  * that the decompressed file name will not conflict with the compressed file
  * name.
- * 
- * 
+ *
+ *
  */
 @Component
 public class GzipFileProcessor implements FileProcessor {
@@ -36,6 +36,7 @@ public class GzipFileProcessor implements FileProcessor {
 	private static final String GZIP_EXTENSION = ".gz";
 
 	private final SequenceFileRepository sequenceFileRepository;
+	private boolean disableFileProcessor = false;
 	private boolean removeCompressedFile;
 
 	@Autowired
@@ -53,7 +54,7 @@ public class GzipFileProcessor implements FileProcessor {
 	 * Decide whether or not to delete the original compressed files that are
 	 * uploaded once they're unzipped. If <code>false</code> they will be kept
 	 * in their revision directories.
-	 * 
+	 *
 	 * @param removeCompressedFile
 	 *            Whether or not to delete original compressed files.
 	 */
@@ -62,25 +63,44 @@ public class GzipFileProcessor implements FileProcessor {
 	}
 
 	/**
+	 * Disables this file processor from processing files.
+	 *
+	 * @param disableFileProcessor True if this processor should be disabled, false
+	 *                             otherwise.
+	 */
+	public void setDisableFileProcessor(boolean disableFileProcessor) {
+		this.disableFileProcessor = disableFileProcessor;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Transactional
 	@Override
 	public void process(SequencingObject sequencingObject) {
-		for (SequenceFile file : sequencingObject.getFiles()) {
-			processSingleFile(file);
+		if (!disableFileProcessor) {
+			for (SequenceFile file : sequencingObject.getFiles()) {
+				processSingleFile(file);
+			}
+		} else {
+			logger.debug("Not running process. It has been disabled");
 		}
 	}
 
 	/**
 	 * Process a single {@link SequenceFile}
-	 * 
+	 *
 	 * @param sequenceFile
 	 *            file to process
 	 * @throws FileProcessorException
 	 *             if an error occurs while processing
 	 */
 	public void processSingleFile(SequenceFile sequenceFile) throws FileProcessorException {
+		if (disableFileProcessor) {
+			logger.debug("Not running processSingleFile. It has been disabled");
+			return;
+		}
+
 		Path file = sequenceFile.getFile();
 		String nameWithoutExtension = file.getFileName().toString();
 
@@ -91,7 +111,7 @@ public class GzipFileProcessor implements FileProcessor {
 
 		try {
 			logger.trace("About to try handling a gzip file.");
-			if (isCompressed(file)) {
+			if (FileUtils.isGzipped(file)) {
 				file = addExtensionToFilename(file, GZIP_EXTENSION);
 
 				try (GZIPInputStream zippedInputStream = new GZIPInputStream(Files.newInputStream(file))) {
@@ -129,7 +149,7 @@ public class GzipFileProcessor implements FileProcessor {
 
 	/**
 	 * Ensures that the supplied file ends with a specific extension.
-	 * 
+	 *
 	 * @param file
 	 *            the file to handle.
 	 * @return the modified (or not) file.
@@ -150,29 +170,15 @@ public class GzipFileProcessor implements FileProcessor {
 	 */
 	@Override
 	public Boolean modifiesFile() {
-		return true;
+		return !disableFileProcessor;
 	}
 
-	/*
-	 * Determines if a byte array is compressed. Adapted from stackoverflow
-	 * answer:
-	 * 
-	 * @see
-	 * http://stackoverflow.com/questions/4818468/how-to-check-if-inputstream
-	 * -is-gzipped#answer-8620778
-	 * 
-	 * @param bytes an array of bytes
-	 * 
-	 * @return true if the array is compressed or false otherwise
-	 * 
-	 * @throws java.io.IOException if the byte array couldn't be read
-	 */
-	private boolean isCompressed(Path file) throws IOException {
-		try (InputStream is = Files.newInputStream(file, StandardOpenOption.READ)) {
-			byte[] bytes = new byte[2];
-			is.read(bytes);
-			return ((bytes[0] == (byte) (GZIPInputStream.GZIP_MAGIC))
-					&& (bytes[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8)));
+	@Override
+	public boolean shouldProcessFile(SequencingObject sequencingObject) {
+		//we don't want to unzip fast5 objects for now because it may be a directory of objects
+		if (sequencingObject instanceof Fast5Object) {
+			return false;
 		}
+		return true;
 	}
 }

@@ -12,8 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.springframework.beans.DirectFieldAccessor;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,6 +49,7 @@ import ca.corefacility.bioinformatics.irida.model.workflow.description.IridaWork
 import ca.corefacility.bioinformatics.irida.model.workflow.description.IridaWorkflowToolRepository;
 import ca.corefacility.bioinformatics.irida.model.workflow.structure.IridaWorkflowStructure;
 import ca.corefacility.bioinformatics.irida.model.workflow.submission.AnalysisSubmission;
+import ca.corefacility.bioinformatics.irida.model.workflow.submission.ProjectAnalysisSubmissionJoin;
 
 /**
  * Generates test data for unit tests.
@@ -203,6 +206,11 @@ public class TestDataFactory {
 		return list;
 	}
 
+	public static ProjectAnalysisSubmissionJoin constructProjectAnalysisSubmissionJoin(
+		Project project, AnalysisSubmission submission) {
+		return new ProjectAnalysisSubmissionJoin(project, submission);
+	}
+
 	public static List<Join<Project, Sample>> constructListJoinProjectSample() {
 		List<Join<Project, Sample>> list = new ArrayList<>();
 		Sample sample = constructSample();
@@ -230,6 +238,11 @@ public class TestDataFactory {
 
 			@Override public long getTotalElements() {
 				return 1;
+			}
+
+			@Override
+			public <U> Page<U> map(Function<? super ProjectSampleJoin, ? extends U> function) {
+				return null;
 			}
 
 			@Override public int getNumber() {

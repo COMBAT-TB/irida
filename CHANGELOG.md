@@ -1,6 +1,135 @@
 Changes
 =======
 
+20.05 to 20.09
+--------------
+* [UI] Updated project user groups to use Ant Design.
+* [UI/Developer]: Removed most dependency for `momentjs` (only on project samples filters).
+* [Developer]: Removed deprecated Long constructor.
+* [Developer]: Updated `webpack-dev-server` to fix security vulnerability caused by `websocket-extensions` 0.1.3.
+* [UI]: Update project metadata templates listing page to use Ant Design.
+* [UI/Developer]: Removed SASS compilation step from front end build. Everything is done using postcss now.
+* [Developer]: Bumped `node` version to 12.18.0.
+* [UI]: Fixed bug when creating/modifying a metadata template the user could not search for a field. (20.05.1)
+* [UI]: Fixed bug where managers could not load Users listing page. (20.05.1)
+* [UI]: Added functionality for users to synchronize assembly data from remote APIs.
+* [Developer]: Updated chromedriver to version `latest`.
+* [UI]: Removed gravatar and replaced with user icon.
+* [Developer]: Removed `webpack-dev-server`.
+* [UI]: Fixed issue where analysis results pages would hang after running with remote synchronized data. (20.05.2)
+* [Developer]: Updated chromedriver to version `latest`. (20.05.2)
+* [Developer]: Updated frontend dependencies (`babel`, `fontawesome`, and `ant-icons`)
+* [UI]: Updated NCBI Exports listing pages to use Ant Design Tables.
+* [UI/Developer]: Removed `irida.cart.js` (an older angularjs service for the cart).
+* [UI]: Fixed issue #637 where metadata toggles were not displaying in the "on" position properly on loading the advanced phylogenic viewer.
+* [UI]: Removed unused front end dependencies (`angular-boostrap-lightbox` and `lodash.keys`).
+* [Developer/UI]: Removed `irida` angular app.  Individual components load themselves now.
+* [Developer/UI]: Updated to Ant Design v4.4.2.
+* [UI]: Updated importing numbers through excel file.  IRIDA will now check for excel formatted numeric cells and keep the formatting. (20.05.3);
+* [UI]: Updated sample details metadata so that long values will be broken up over multiple lines. (20.05.3);
+* [Developer]: Updated `babel-env` to fix a security vulnerability caused by dependency `elleptic`
+* [UI]: Updated UI for creating a sample within a project.
+* [REST]: Removed broken XML serialization config from REST API classes.  It was breaking content negotiation for some tools as it sometimes tried to return XML when it couldn't.
+* [UI]: Added `Create New Project` button to the Projects listing page.
+* [UI]: Fixed bug where import bulk metadata button was displayed on linelist page for project collaborators. (20.05.04)
+* [UI]: Fixed bug where add member to project button was displayed on project members page for project collaborators. (20.05.04)
+
+20.01 to 20.05
+--------------
+* [UI/Developer]: Removed webpack progress.
+* [UI]: Updated clients listing table to use `ant.design` tables.
+* [UI]: Sending email to sync user when a remote project's token expires.
+* [UI]: Fixed bug that prevented server side filtering for analysis name on analyses table. (20.01.01)
+* [UI]: Updated admin announcements table and creation to use `ant.design`.
+* [UI]: Fixed bug that preventing using the `ngs-linker` script with >= 330 samples.
+* [UI]: Updated breadcrumbs to have cleaner look and feel and include the actual project and sample names.
+* [UI/Developer]: Updated to `react` 16.13.0.
+* [Developer]: Added Apache 2.0 licence information to `package.json`.
+* [UI]: Fixed UI bugs preventing users from selecting single-end input files for analysis pipelines. (20.01.2)
+* [UI]: Icon cleanup preparing for upgrade to Ant Design v4.
+* [UI/Developer]: Remove `husky` because running into issues with `prettier` formatting on staged files..
+* [API/Developer]: Changed the `SequencingRun` type to allow a user-defined `sequencerType` instead of it being hardcoded to `MiSeq`.
+* [Developer]: Updated maven `jetty` plugin to version 9.4.24.v20191120.
+* [UI]: Updated Remote API Listing page to use Ant Design.
+* [UI]: Updated Administrator Users page to use Ant Design.
+* [UI]: Removed DataTables from overrepresented sequence file and run files page.
+* [REST]: Added a REST API endpoint to read assemblies for samples.
+* [UI]: Added selection for linker script to get assemblies in project/samples page.
+* [Developer]: `bower` completely removed.
+* [UI/Developer]: Updated analysis results page with Ant Design and React.
+* [UI]: Assemblies can now be uploaded through the sample files page. See more in our upgrade notes at <https://irida.corefacility.ca/documentation/administrator/upgrades/#2005>.
+* [UI/Developer]: Updated to `Prettier` 2.0.2
+* [UI/Developer]: Updated to `eslint-plugin-react-hooks` to 3.0.0.
+* [UI/Developer]: Removed `angular-ui-bootstrap` as a global dependency (still required on several pages).
+* [UI/Developer]: New login page with developer ability to override template.
+* [UI/Developer]: Added excel file viewer to analysis outputs view.
+* [UI]: Added selection to export assemblies to Galaxy.
+* [UI]: Updated Project > Members page to remove `DataDables` and use Ant Design.
+* [UI/Developer]: Added image file viewer to analysis outputs view.
+* [UI]: Moved project > details into the project > settings panel.
+* [UI]: Updated Project navigation to use Ant Design menu.
+* [UI/Developer]: Updated to JQuery v3.5.1 to fix security vulnerability.
+* [UI]: Fixed bug preventing the upload of `*.fastqc.gz` on Mac computers.
+* [UI]: Update Groups page to remove `DataTables` and use Ant Design.
+* [UI]: Update Groups details page to use Ant Design and remove `DataTables`.
+* [UI]: Fixed bug preventing display of execution tools for first file if a provenance for another file had been viewed.
+* [Documentation]: Updated Getting Started docs to include IRIDA log in info and an updated install-libs.sh run command.
+* [Developer/UI]: Upgraded to FastQC 0.11.9.
+* [UI]: Added FAST5 format support.  FAST5 support is in beta and is subject to change.  See more in our upgrade notes at <https://irida.corefacility.ca/documentation/administrator/upgrades/#2005>.
+* [UI]: Updated user groups to use Ant Design.
+* [UI]: Fixed bug preventing advanced visualization view page load.
+* [UI/Developer]: Updated analysis urls to work with a context path.
+* [UI]: Outputs and Tree view now span the full width of the page.
+* [Processing]: Fixed bug where analyses wouldn't run if project didn't have analysis priority.
+
+19.09 to 20.01
+--------------
+* [UI]: Fixed default server language.  It was accidentally set to 'fr' for release.  (19.09.1)
+* [Developer]: Upgraded development Java version to Java 11 (LTS).
+* [UI]: Fixed default server language.  It was accidentally set to 'fr' for release.  (19.09.1)
+* [UI/Developer]: Updated ant.design and ag-grid to fix issue with horizontal scrolling in firefox.
+* [UI]: Fixed issue where links to pipelines on the cart page displayed incorrectly.
+* [UI]: Updated project and global analyses listing pages to use Ant Design tables.
+* [UI]: Updated sequencing runs table to use Ant Design tables.
+* [UI/Developer]: Minor package updates for `babel`, `eslint` and `ant.design`.
+* [API]: Fixed concatenating `.fastq.gz` files from the user interface. 
+* [UI]: Fixed bug where `Let the Pipeline Run` button failed to empty the cart and redirect the user to the projects page.
+* [UI/Developer]: Removed `marked` and `angular-marked` as bower dependencies.
+* [UI]: Fixed issue where grant types, and refresh token validity would not populate correctly on client edit form.
+* [UI]: Fixed issue where hidden portions of client edit and creation form would not toggle correctly.
+* [UI]: Fixed issue with browser auto-filling password fields on the user edit page.
+* [UI]: Fixed issue where user role would reset if server validation failed on user create page.
+* [UI]: Fixed bug where the "Automatically  create collection" could not be unchecked when exporting to Galaxy.
+* [UI/Developer]: Removed `marked`, `angular-marked`, `select2`, `angular-bootstrap` and `ng-file-upload` as bower dependencies.
+* [REST/Developer]: added the `/api/version` route to the REST API that returns the full version string.
+* [UI]: Fixed issue where issue where cart is not rendering to the full height of the page. (19.09.2)
+* [UI]: Updated and simplified associated project page.
+* [UI/Developer]: Removed old bootstrap customization files that are not used.
+* [Developer]: Upgraded Spring to 5.2.2.RELEASE, Spring Security to 5.2.1.RELEASE, Spring Security Oauth2 to 2.3.6.RELEASE, Hibernate to 5.4.7.Final, and Spring Data JPA to 2.2.0.RELEASE.
+* [UI/REST]: Removed API login controller, instead web login controller is used.
+* [UI/REST]: Added configurable redirect location to client details.  This must be added to all `authorization_code` clients.  This includes clients set up for synchronizing IRIDA data and Galaxy importer clients.  See upgrade instructions at <https://irida.corefacility.ca/documentation/administrator/upgrades/#2001>.
+* [Developer]: Added back minification config to production webpack config.
+* [UI/Developer]: Updated to latest (3.26.0) release of `ant.design`.
+* [Developer]: Fixed url for downloading multiple analysis outputs as well as for viewing the user analysis outputs page.
+* [Documentation]: Removed broken NCBI link and added info to conact NCBI about NCBI SRA exports.
+* [UI/Developer]: Lazy load line list export utilities.
+* [Developer]: Update to Chromedriver 79.0.0 for Travis CI.
+* [UI/Developer]: Standardized JavaScript internationalization through webpack. See [i18n documentation](https://irida.corefacility.ca/documentation/developer/interface/i18n/) for more information.
+* [UI/Developer]: Update version of `yarn`, `babel` dependencies.
+* [Developer]: Sample filter input has underscores escaped so that proper samples are returned.
+* [UI/Developer]: Updated to the latest release of ag-grid (v22.1.1).
+* [UI/Developer]: Updated how url's are created to allow for the addition of the context path.
+* [Admin]: Fixed handling of file extensions of compressed sequence files uploaded to NCBI SRA.
+* [Documentation]: Updated links and references from the old IRIDA MiSeq Uploader to the new IRIDA Uploader as the old uploader will not be supported when python 2 reaches end of life.
+* [UI]: Add analyses queued and running counts to analyses listing pages, cart page, and pipeline launch page.
+* [UI/Developer]: Force angular to use only version 1.7.9 to avoid security vulnerability.
+* [UI/Developer]: Updated to V5 of styled-components.
+* [UI/Developer]: Update version of `babel` and `eslint`.
+* [Documentation]: Fixed documentation link for developer authorization/oauth docs.
+* [Documentation]: Added info about upgrading to Tomcat 8.
+* [Documentation]: Added notice to upgrading guide about mysql 5.5 hibernate dialect.
+* [UI]: Fixed page title for users list page.
+
 19.05 to 19.09
 ---------------
 * [UI/Developer]: Removed `datatables-bootstrap3-plugin` to remove dependency on outdated `jquery`.
@@ -10,6 +139,37 @@ Changes
 * [UI/Developer]: Cleaned up some of the redux set up on the linelist page.
 * [UI/Developer]: Removed loading Bootstrap through `bower` and moved it into the webpack build.
 * [UI/Developer]: Removed loading angularjs through `bower` and moved it into the webpack build.
+* [UI/Developer]: Fixed bug where importing an metadata excel worksheet with numbers as column headers would fail.
+* [UI/Developer]: Updated `axios` to fix vulnerability.
+* [Workflow]: Fixing bug so that fastq files uploaded to Galaxy will be "fastqsanger" when uncompressed and "fastqsanger.gz" when compressed.
+* [UI/Developer]: Updated `fstream` to fix vulnerability.
+* [Developer]: Update pom file to reflect active IRIDA developers.
+* [UI]: Fixed bug where a new metadata template could not be created. (19.05.1)
+* [UI/Developer]: Updated to latest `react-redux` to use new hooks API.
+* [UI]: Updated session expiration modal.
+* [UI]: Removed `momentjs` from being loaded on every page.
+* [UI]: Removed `livestampjs` as a project dependency.
+* [REST]: Changed the URL suffix to analysis output files to be a numerical id instead of a hash key.  Files with a `.` in the name were having issues resolving.  No change in `rel`s so applications should work as usual.
+* [UI]: Removed `noty` as a `bower` dependency.
+* [Developer]: Removed unnecessary `exists` call in `updateFields` method which was causing some hibernate caching issues.
+* [UI]: Removed `noty` as `yarn` dependency, only using `ant.design` notifications.
+* [UI/Developer]: Removed `datatables` as a bower dependency.
+* [UI/Developer]: Removed unused dependencies from `bower` (`angular-bootstrap-switch`, `animate.css`, `angular-datatables`, `angular-daterangepicker-enhanced`, `lodash`, `clipboard`, and `jszip`)
+* [UI]: Removed lighthouse modals from the sequence files page.  Loading full images.  Removed dependency `angular-bootstrap-lightbox` from `bower`.
+* [Documentation]: Fixed `shed-tools` command to include `install` subcommand for installing Galaxy tools.
+* [UI/Developer]: Updated to lodash v4.17.13 to fix security issue.
+* [Developer]: Updated UI testing to allow using an external selenium webdriver.
+* [Developer]: Update eslint config to use `babel-parser`.
+* [Admin/Documentation]: Added a [Troubleshooting](https://irida.corefacility.ca/documentation/user/administrator/troubleshooting/pipelines/) guide for troubleshooting common problems with IRIDA Pipelines/Galaxy.
+* [Developer]: Split `ProjectSettingsController` into smaller functional controllers and moved them to a `.settings` subpackage.
+* [UI/Developer]: Allowing any analysis pipeline to be run automatically on data upload.  See <https://irida.corefacility.ca/documentation/user/user/project/#automated-pipelines> for more details.
+* [Documentation]: Added link to Galaxy Export (Import) tool documentation.
+* [REST API]: Fixed allowing uploading data to non `UPLOADING` state sequencing runs. Now when a sequencing run is in a `COMPLETE` or `ERROR` state, a `BAD_REQUEST` http response will be returned.
+* [Developer]: Internationalization features of Spring now being used properly.  An interceptor was previously set up, but wasn't being taken advantage of in the UI.  Currently only English is available, but could be added by developers as needed.
+* [Developer]: Updates to front-end packages: `antd@3.19.8` -> `antd@3.21.4`, `@babel/polyfill` -> `core-js/stable` & `regenerator-runtime/runtime`, as well as some minor updates to webpack dependencies.
+* [Developer]: Updated to node `v12.8.1`.
+* [Developer]: Updated `eslint` to fix security vulnerability.
+* [Admin]: Added NCBI Upload FTP option to disable/enable passive mode for FTP `ncbi.upload.ftp.passive`.
 
 19.01 to 19.05
 ---------------
@@ -51,6 +211,7 @@ Changes
 * [Database]: Fixed issue where FastQC description was being stored with an invalidly formatted version in the database.
 * [UI]: Fixed bug causing issues with saving Line List templates.
 * [UI]: Fixed bug when selecting all samples on the project samples page would not add them to cart.
+* [Developer]: Updated to latest version of NodeJS LTS (12.13.0) and Yarn (v1.19.1).
 
 0.22.0 to 19.01
 ----------------

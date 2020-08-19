@@ -1,6 +1,12 @@
-You can create a new project by clicking on the "Projects" menu at the top of the dashboard and selecting "Create New Project":
+You can create a new project by clicking on the "Projects" menu at the top of the dashboard and selecting "Your Projects".
 
-![Create new project dashboard location.]({{ site.baseurl }}/images/tutorials/common/projects/create-new-project.png)
+![your-projects]
+
+From the projects listing page click the "Create New Project" button:
+
+![create-new-project]
+
+![Create new project dashboard location.]({{ site.baseurl }}/images/tutorials/common/projects/create-new-project-btn.png)
 
 When you create a new project, you'll need to provide a project name, and can optionally provide a project organism, a free-form project description, and a link to another web site that has more inforamtion about the project:
 
@@ -16,8 +22,6 @@ The organism names are derived from the [NCBI taxonomy database](http://www.ncbi
 
 To lock sample modification in the new project, check the "Lock sample modification" box. This setting will only allow the sample owner to edit any sample data.
 
-To enable automated assemblies for the project, check the "Automatically assemble data uploaded to project" box.  This setting will perform an assembly on all sequence files uploaded to this project.  For more information about automated assemblies see the [samples documentation]({{ site.baseurl }}/user/user/samples/#viewing-automated-assemblies).
-
 When you've finished entering the details for your new project, click on the "Create Project" button. You will be redirected to the projects list.
 
 IRIDA will automatically generate a numeric project identifier for your project. The project identifier is used by external tools for uploading sequencing data to IRIDA. The project identifier can be found in the ["Project Details" panel]({{ site.baseurl }}/user/user/project/index.html#viewing-project-details), or in the [projects list]({{ site.baseurl }}/user/user/project/index.html#viewing-existing-projects).
@@ -27,3 +31,6 @@ IRIDA will automatically generate a numeric project identifier for your project.
 You can create a project with samples already added to the project by using the cart.  Continue creating the project details as described above, but select the checkbox **Add samples in cart to project**.  If this checkbox is enabled any samples in the cart will be automatically added to this project.  If there are any samples which you cannot add to the project, a warning will be displayed below.
 
 ![Create project cart warning]({{ site.baseurl }}/images/tutorials/common/projects/create-project-cart-warning.png)
+
+[create-new-project]: images/create-new-project-btn.png
+[your-projects]: images/your-projects.png

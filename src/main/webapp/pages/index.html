@@ -14,7 +14,7 @@
     };
   </script>
 </head>
-<body>
+<body ng-app="irida.dashboard">
 <div class="row" style="margin-top: 1em;" layout:fragment="page">
   <div class="col-md-6 col-lg-5 col-lg-offset-1 col-sm-12">
     <section class="panel panel-primary">
@@ -54,9 +54,6 @@
 </div>
 
 <th:block layout:fragment="scripts">
-  <script th:src="@{/resources/bower_components/livestampjs/livestamp.min.js}"></script>
-  <script th:src="@{/resources/bower_components/marked/marked.min.js}"></script>
-  <script th:src="@{/resources/bower_components/angular-marked/angular-marked.min.js}"></script>
   <script th:src="@{/dist/js/dashboard.bundle.js}"></script>
 </th:block>
 </body>

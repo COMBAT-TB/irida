@@ -5,13 +5,13 @@
 <body>
 <div class="col-md-12 col-lg-10 col-lg-offset-1" layout:fragment="page">
 
-    <div class="row">
+    <div class="row spaced-top">
         <header>
             <div class="col-md-10">
                 <h1 class="t-title" th:text="#{samples.title(${sample.getLabel()})}">__TITLE__</h1>
             </div>
             <div class="col-md-2" th:if="${canManageSample}">
-                <a id="edit-sample" class="btn btn-default btn-sm pull-right ng-cloak"
+                <a id="edit-sample" class="btn btn-default btn-sm pull-right"
                    href="edit" th:text="#{form.btn.edit}">__EDIT__</a>
             </div>
         </header>
@@ -66,8 +66,8 @@
                             <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>
                         </div>
                         <div th:text="#{samples.details.modified}">Modified</div>
-                        <div class="sidebar__value" id="sb-modified" data:livestamp="${sample.getModifiedDate()}"
-                             th:title="${#calendars.format(sample.getModifiedDate(), 'dd MMM yyyy')}"></div>
+                        <div class="sidebar__value" id="sb-modified"
+                             th:text="${#calendars.format(sample.getModifiedDate(), 'dd MMM yyyy')}"></div>
                     </div>
                     <div th:if="${sample.isRemote()}" th:with="status=${sample.getRemoteStatus()}">
                         <div class="sidebar__item">
@@ -97,9 +97,6 @@
     </div>
 </div>
 <th:block layout:fragment="page-scripts">
-    <script th:src="@{/resources/bower_components/livestampjs/livestamp.min.js}"
-            src="/resources/bower_components/livestampjs/livestamp.min.js"></script>
-
     <th:block layout:fragment="scripts"></th:block>
 </th:block>
 </body>
