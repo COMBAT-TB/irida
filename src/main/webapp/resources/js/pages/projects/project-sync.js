@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * @file Responsible for setting up new project synchronizations with a remote API.
  * Loaded onto pages/projects/project_sync.html
@@ -86,10 +87,24 @@ function getApiProjects(apiId) {
       $projectSelect.prop("disabled", true);
     }
   });
+=======
+import React from "react";
+import { render } from "react-dom";
+import { Card, Col, Row } from "antd";
+import { SPACE_LG } from "../../styles/spacing";
+import { CreateRemoteProjectSyncForm } from "../../components/remote-api/CreateRemoteProjectSyncForm";
+
+function NewRemoteProjectForm() {
+  return (
+    <Row style={{ marginTop: SPACE_LG }}>
+      <Col md={{ span: 12, offset: 6 }}>
+        <Card title={i18n("NewProjectSync.title")}>
+          <CreateRemoteProjectSyncForm />
+        </Card>
+      </Col>
+    </Row>
+  );
+>>>>>>> d58481ab0bf4acbd71d159968733b9ae6316ee34
 }
 
-/*
-Initialize the page.
- */
-initConnectRemoteApi(updateConnection);
-updateConnection(originalApiId);
+render(<NewRemoteProjectForm />, document.querySelector("#root"));

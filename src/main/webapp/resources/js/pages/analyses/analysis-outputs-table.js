@@ -320,13 +320,7 @@ async function getTableData(isShared = true) {
       field: "analysisSubmissionName",
       headerName: i18n("analysis-submission"),
       cellRenderer: p =>
-<<<<<<< HEAD
-        `<a href="${AJAX_URL}analysis/${
-          p.data.analysisSubmissionId
-        }" target="_blank">${p.data.analysisSubmissionName}</a>`
-=======
         `<a href="${BASE_URL}analysis/${p.data.analysisSubmissionId}" target="_blank">${p.data.analysisSubmissionName}</a>`
->>>>>>> 1845c175cfcaf08525630d6266454d3b57e8d462
     },
     PROJECT_ID
       ? {
